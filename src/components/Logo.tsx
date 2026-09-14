@@ -10,7 +10,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
       </span>
       {!compact && (
         <span className="text-[15px] font-medium tracking-[0.02em] text-white">
-          Agegmemnon
+          Agamemnon
         </span>
       )}
     </span>

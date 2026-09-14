@@ -15,7 +15,7 @@ const ibmMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home | Agegmemnon",
+  title: "Home | Agamemnon",
   description:
     "Offline patent intelligence for USPTO examiners and filers — classification, prior art, and streamlined examination.",
 };

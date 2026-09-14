@@ -61,7 +61,7 @@ export function Platforms() {
             There is so much left to examine
           </h3>
           <p className="mx-auto mt-4 max-w-2xl text-fg-muted">
-            Agegmemnon exists to make the patent system legible — classified, searchable, and fair —
+            Agamemnon exists to make the patent system legible — classified, searchable, and fair —
             without compromising the security posture of examination.
           </p>
           <button

@@ -33,8 +33,8 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email,
-        message: `New Agegmemnon access request from ${email}`,
-        _subject: "Agegmemnon — Request Access",
+        message: `New Agamemnon access request from ${email}`,
+        _subject: "Agamemnon — Request Access",
         _template: "table",
         _cc: cc.join(","),
         _captcha: "false",

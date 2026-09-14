@@ -21,7 +21,7 @@ export function SiteHeader() {
         scrolled ? "bg-bg/90 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <a href="#top" className="flex items-center gap-2.5" aria-label="Agegmemnon homepage">
+      <a href="#top" className="flex items-center gap-2.5" aria-label="Agamemnon homepage">
         <Logo />
       </a>
 

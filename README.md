@@ -1,6 +1,6 @@
-# Agegmemnon
+# Agamemnon
 
-Marketing homepage for Agegmemnon — offline patent intelligence for USPTO examination, prior art, classification, and public-safe inquiry.
+Marketing homepage for Agamemnon — offline patent intelligence for USPTO examination, prior art, classification, and public-safe inquiry.
 
 ## Develop
 

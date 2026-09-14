@@ -11,7 +11,7 @@ export function SiteFooter() {
           </p>
         </div>
         <p className="text-xs text-fg-dim">
-          © {new Date().getFullYear()} Agegmemnon. All rights reserved.
+          © {new Date().getFullYear()} Agamemnon. All rights reserved.
         </p>
       </div>
     </footer>
