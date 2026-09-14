@@ -56,13 +56,29 @@ const slides = [
 export function OfferingsCarousel() {
   const [active, setActive] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
+  const hasUserNavigated = useRef(false);
 
   useEffect(() => {
-    const node = trackRef.current?.children[active] as HTMLElement | undefined;
-    node?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    // Avoid scrollIntoView on first paint — it was pulling the whole page down on load.
+    if (!hasUserNavigated.current) return;
+
+    const track = trackRef.current;
+    const node = track?.children[active] as HTMLElement | undefined;
+    if (!track || !node) return;
+
+    const left = node.offsetLeft - (track.clientWidth - node.clientWidth) / 2;
+    track.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [active]);
 
-  const next = () => setActive((i) => (i + 1) % slides.length);
+  const select = (index: number) => {
+    hasUserNavigated.current = true;
+    setActive(index);
+  };
+
+  const next = () => {
+    hasUserNavigated.current = true;
+    setActive((i) => (i + 1) % slides.length);
+  };
 
   return (
     <section id="slides" className="border-t border-border bg-bg pt-10 pb-16">
@@ -71,7 +87,7 @@ export function OfferingsCarousel() {
           <button
             key={slide.id}
             type="button"
-            onClick={() => setActive(index)}
+            onClick={() => select(index)}
             className={`h-9 px-3 text-[13px] transition ${
               active === index
                 ? "bg-white text-black"

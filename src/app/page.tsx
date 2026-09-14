@@ -3,12 +3,14 @@ import { OfferingsCarousel } from "@/components/OfferingsCarousel";
 import { Platforms } from "@/components/Platforms";
 import { ProductSections } from "@/components/ProductSections";
 import { RequestAccessProvider } from "@/components/RequestAccessModal";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
 export default function Home() {
   return (
     <RequestAccessProvider>
+      <ScrollToTop />
       <div id="top" className="min-h-screen bg-bg text-fg">
         <SiteHeader />
         <main>
