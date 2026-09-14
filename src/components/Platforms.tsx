@@ -36,7 +36,7 @@ export function Platforms() {
             Build and manage ontology-powered patent software, with a complete examination platform
           </h2>
           <p className="mt-5 text-fg-muted">
-            The central system for orchestrating decisions across human examiners and AI assistance —
+            The central system for orchestrating decisions across human examiners and AI assistance:
             deployable in sovereign, offline environments.
           </p>
         </div>
@@ -61,7 +61,7 @@ export function Platforms() {
             There is so much left to examine
           </h3>
           <p className="mx-auto mt-4 max-w-2xl text-fg-muted">
-            Agamemnon exists to make the patent system legible — classified, searchable, and fair —
+            Agamemnon exists to make the patent system legible, classified, searchable, and fair,
             without compromising the security posture of examination.
           </p>
           <button

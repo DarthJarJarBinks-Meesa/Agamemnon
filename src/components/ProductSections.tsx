@@ -68,8 +68,8 @@ export function ProductSections() {
             from prior art to office action
           </p>
           <h2 className="mt-6 text-2xl font-normal leading-relaxed text-fg-muted md:text-[1.75rem]">
-            Our software powers examination decisions across the USPTO stack — from intake to
-            allowance — on closed networks and with public-safe inquiry layers.
+            Our software powers examination decisions across the USPTO stack, from intake to
+            allowance, on closed networks and with public-safe inquiry layers.
           </h2>
         </div>
       </section>
@@ -98,7 +98,7 @@ export function ProductSections() {
         index="/0.3"
         eyebrow="Lexicon"
         title="Classify every active patent into a living taxonomy"
-        description="Extend the existing USPTO classification system with model-assisted labels that stay current as technology evolves — searchable, auditable, and examiner-overridable."
+        description="Extend the existing USPTO classification system with model-assisted labels that stay current as technology evolves: searchable, auditable, and examiner-overridable."
         videoSrc="/videos/lexicon.mp4"
       />
 
@@ -117,7 +117,7 @@ export function ProductSections() {
         index="/0.5"
         eyebrow="Vault"
         title="Offline, closed-source model trained on patent data"
-        description="Vault never phones home. Deploy on air-gapped USPTO infrastructure with a model trained exclusively on patent literature — built for custody, audit, and sovereign control."
+        description="Vault never phones home. Deploy on air-gapped USPTO infrastructure with a model trained exclusively on patent literature: built for custody, audit, and sovereign control."
         videoSrc="/videos/vault.mp4"
       />
     </div>
