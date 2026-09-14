@@ -69,15 +69,43 @@ function RequestAccessModal() {
     setError("");
 
     try {
-      const res = await fetch("/api/request-access", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      // Submit from the browser so FormSubmit sees the real site origin
+      // (server-side proxy fails / needs re-activation per domain on Vercel).
+      const res = await fetch(
+        "https://formsubmit.co/ajax/sepehrkhavari13@gmail.com",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            message: `New Agamemnon access request from ${email}`,
+            _subject: "Agamemnon — Request Access",
+            _template: "table",
+            _cc: "dillan.prasad17@gmail.com",
+            _captcha: "false",
+          }),
+        },
+      );
 
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong. Please try again.");
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: string | boolean;
+        message?: string;
+      };
+
+      const message = data.message ?? "";
+      const ok = data.success === true || data.success === "true";
+
+      if (/activation|activate form|needs activation/i.test(message)) {
+        throw new Error(
+          "Check sepehrkhavari13@gmail.com (and Spam) for a FormSubmit email, then click Activate Form. After that, try again.",
+        );
+      }
+
+      if (!res.ok || !ok) {
+        throw new Error(message || "Could not send your request. Please try again shortly.");
       }
 
       setStatus("success");
