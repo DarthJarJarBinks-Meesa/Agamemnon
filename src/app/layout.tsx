@@ -19,11 +19,11 @@ const ibmMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Agamemnon | Offline Patent Intelligence for USPTO Examination",
-    template: "%s | Agamemnon",
+    default: "Agamemnon AI | Offline Patent Intelligence",
+    template: "%s | Agamemnon AI",
   },
   description:
-    "Agamemnon builds offline, closed-source patent intelligence for USPTO examiners and filers — classification, prior art search, viability analysis, and public-safe patent inquiry.",
+    "Agamemnon provides offline patent intelligence for USPTO examination, including prior-art search, patent classification, and streamlined patent review.",
   keywords: [
     "Agamemnon",
     "USPTO",
@@ -43,24 +43,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Agamemnon",
-    title: "Agamemnon | Offline Patent Intelligence for USPTO Examination",
+    siteName: "Agamemnon AI",
+    title: "Agamemnon AI | Offline Patent Intelligence",
     description:
-      "Offline patent intelligence for USPTO examiners and filers — classification, prior art, viability analysis, and streamlined examination on closed networks.",
+      "Agamemnon provides offline patent intelligence for USPTO examination, including prior-art search, patent classification, and streamlined patent review.",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Agamemnon",
+        alt: "Agamemnon AI",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agamemnon | Offline Patent Intelligence for USPTO Examination",
+    title: "Agamemnon AI | Offline Patent Intelligence",
     description:
-      "Offline patent intelligence for USPTO examiners and filers — classification, prior art, viability analysis, and streamlined examination.",
+      "Agamemnon provides offline patent intelligence for USPTO examination, including prior-art search, patent classification, and streamlined patent review.",
     images: ["/og.png"],
   },
   robots: {
