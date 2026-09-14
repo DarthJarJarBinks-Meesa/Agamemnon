@@ -47,9 +47,6 @@ export function ProductSection({
         </div>
 
         <div className="relative overflow-hidden border border-border bg-bg-panel">
-          <div className="absolute left-3 top-3 z-10 font-mono text-[11px] tracking-widest text-white/70">
-            {index} // interactive preview
-          </div>
           <LazyVideo
             src={videoSrc}
             className="aspect-[16/10] w-full object-cover"

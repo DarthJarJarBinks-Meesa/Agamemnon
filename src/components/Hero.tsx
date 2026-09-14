@@ -6,7 +6,7 @@ export function Hero() {
       <div className="absolute inset-0">
         <LazyVideo
           src="/videos/hero.mp4"
-          className="hero-media h-full w-full object-cover opacity-55"
+          className="hero-media h-full w-full object-cover opacity-55 brightness-[1.5]"
           eager
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-bg" />
