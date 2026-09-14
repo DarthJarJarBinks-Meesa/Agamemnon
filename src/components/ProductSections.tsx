@@ -62,10 +62,12 @@ export function ProductSections() {
     <div>
       <section className="px-4 pt-20 pb-4 md:px-6 md:pt-28">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="text-sm tracking-wide text-fg-muted uppercase md:text-base">
-            Automate examination workflows, from prior art to office action
+          <p className="text-[clamp(1.7rem,3.5vw,2.75rem)] font-medium leading-tight tracking-[-0.02em] text-fg">
+            Automate examination workflows,
+            <br />
+            from prior art to office action
           </p>
-          <h2 className="mt-6 text-[clamp(1.7rem,3.5vw,2.75rem)] font-medium leading-tight tracking-[-0.02em]">
+          <h2 className="mt-6 text-2xl font-normal leading-relaxed text-fg-muted md:text-[1.75rem]">
             Our software powers examination decisions across the USPTO stack — from intake to
             allowance — on closed networks and with public-safe inquiry layers.
           </h2>
