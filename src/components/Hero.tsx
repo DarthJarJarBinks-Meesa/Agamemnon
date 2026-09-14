@@ -1,16 +1,14 @@
+import { LazyVideo } from "./LazyVideo";
+
 export function Hero() {
   return (
     <section className="relative flex min-h-[calc(100svh-3.5rem)] items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
-        <video
+        <LazyVideo
+          src="/videos/hero.mp4"
           className="hero-media h-full w-full object-cover opacity-55"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
+          eager
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-bg" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.65)_100%)]" />
       </div>

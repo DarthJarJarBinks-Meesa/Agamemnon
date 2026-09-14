@@ -1,3 +1,5 @@
+import { LazyVideo } from "./LazyVideo";
+
 type ProductSectionProps = {
   id: string;
   index: string;
@@ -48,15 +50,10 @@ export function ProductSection({
           <div className="absolute left-3 top-3 z-10 font-mono text-[11px] tracking-widest text-white/70">
             {index} // interactive preview
           </div>
-          <video
+          <LazyVideo
+            src={videoSrc}
             className="aspect-[16/10] w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
+          />
         </div>
       </div>
     </section>
