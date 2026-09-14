@@ -50,12 +50,14 @@ function RequestAccessModal() {
   const { open, closeModal } = useRequestAccess();
   const titleId = useId();
   const [email, setEmail] = useState("");
+  const [inquiry, setInquiry] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!open) {
       setEmail("");
+      setInquiry("");
       setStatus("idle");
       setError("");
     }
@@ -81,7 +83,8 @@ function RequestAccessModal() {
           },
           body: JSON.stringify({
             email,
-            message: `New Agamemnon access request from ${email}`,
+            inquiry,
+            message: `New Agamemnon access request from ${email}\n\nInquiry:\n${inquiry}`,
             _subject: "Agamemnon — Request Access",
             _template: "table",
             _cc: "dillan.prasad17@gmail.com",
@@ -174,6 +177,19 @@ function RequestAccessModal() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@organization.com"
                 className="h-11 w-full border border-border-strong bg-bg px-3 text-sm text-white outline-none placeholder:text-fg-dim focus:border-white"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-2 block text-xs tracking-wide text-fg-dim uppercase">
+                Nature of inquiry
+              </span>
+              <textarea
+                required
+                rows={4}
+                value={inquiry}
+                onChange={(e) => setInquiry(e.target.value)}
+                placeholder="Tell us a bit about what you’re looking for…"
+                className="w-full resize-y border border-border-strong bg-bg px-3 py-2.5 text-sm text-white outline-none placeholder:text-fg-dim focus:border-white"
               />
             </label>
             {status === "error" && (
