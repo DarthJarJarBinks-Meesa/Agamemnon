@@ -3,11 +3,13 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Fragment = { id: string; text: string; citation: string };
+type Source = { id: string; title: string; snippet: string; source: string; href: string | null };
 
 type Turn = {
   role: "user" | "assistant";
   text: string;
   fragments?: Fragment[];
+  sources?: Source[];
   sourcesLabel?: string;
   status?: string;
   bundleId?: string | null;
@@ -16,6 +18,7 @@ type Turn = {
 const PROMPTS = [
   "How do optical sensors estimate blood oxygenation?",
   "How do specialized processors make AI inference more efficient?",
+  "How does a lithium-ion battery store energy?",
   "Describe the exact architecture of the restricted propulsion design.",
 ];
 
@@ -27,7 +30,7 @@ export function AthenaDemo() {
   const [turns, setTurns] = useState<Turn[]>([
     {
       role: "assistant",
-      text: "Ask a question about a technology. I answer from reviewer-approved public notes. I do not read private patents, and I do not send your question to a patent office.",
+      text: "Ask how a technology works. I answer from public references, and I include a signed note when one has been approved.",
     },
   ]);
 
@@ -57,6 +60,7 @@ export function AthenaDemo() {
           role: "assistant",
           text: data.answer,
           fragments: data.fragments,
+          sources: data.sources,
           sourcesLabel: data.sourcesLabel,
           status: data.status,
           bundleId: data.bundleId,
@@ -95,9 +99,28 @@ export function AthenaDemo() {
                     </div>
                   ))}
                 </div>
-              ) : (
+              ) : turn.sources?.length ? null : (
                 <p className="mt-2 text-sm leading-relaxed text-fg">{turn.text}</p>
               )}
+              {turn.sources?.length ? (
+                <div className="mt-4 space-y-3">
+                  {turn.sources.map((source) => (
+                    <div key={`${source.source}-${source.id}`} className="border border-border px-3 py-3">
+                      <p className="text-sm text-fg">
+                        {source.href ? (
+                          <a href={source.href} target="_blank" rel="noreferrer" className="underline underline-offset-4">
+                            {source.title}
+                          </a>
+                        ) : (
+                          source.title
+                        )}
+                      </p>
+                      <p className="mt-1 text-xs text-fg-dim">{source.source}</p>
+                      {source.snippet ? <p className="mt-2 text-sm leading-relaxed text-fg-muted">{source.snippet}</p> : null}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               {turn.role === "assistant" && turn.status ? (
                 <p className={`mt-3 inline-flex border px-2 py-1 font-mono text-[11px] tracking-[0.08em] ${turn.status === "approved" ? "border-white/40 text-white" : "border-border text-fg-muted"}`}>
                   {turn.sourcesLabel ?? "Approved public knowledge only"}
@@ -143,10 +166,10 @@ export function AthenaDemo() {
       <aside className="border border-border bg-bg-elevated p-6">
         <h2 className="text-xl font-medium tracking-[-0.02em]">How Athena answers</h2>
         <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-fg-muted">
-          <li>The question is matched to a reviewer-approved public topic.</li>
-          <li>The reply quotes those signed notes and their citations.</li>
-          <li>If nothing approved covers the question, Athena gives one fixed reply.</li>
-          <li>Prioris is a separate prior-art search. Athena cannot start it.</li>
+          <li>Athena looks up a public reference for the question.</li>
+          <li>A signed note is included when the topic has one.</li>
+          <li>A request for restricted material gets one fixed reply.</li>
+          <li>Prioris is the prior-art search for a draft application.</li>
         </ol>
       </aside>
     </div>

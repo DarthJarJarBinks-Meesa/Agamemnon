@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { decideAthena } from "@/lib/demo/athena";
+import { decideAthena, isSensitiveQuestion } from "@/lib/demo/athena";
+import { answerFromPublicSources } from "@/lib/live/answer";
+
+export const maxDuration = 60;
 
 const calls = new Map<string, number[]>();
 
@@ -38,5 +41,20 @@ export async function POST(request: Request) {
   const already = Array.isArray(body.releasedBundleIds)
     ? body.releasedBundleIds.filter((id): id is string => typeof id === "string").slice(0, 8)
     : [];
-  return NextResponse.json(decideAthena(body.question, already));
+  const decision = decideAthena(body.question, already);
+  if (isSensitiveQuestion(body.question)) return NextResponse.json(decision);
+
+  const sources = await answerFromPublicSources(body.question);
+  if (!sources.length) return NextResponse.json(decision);
+
+  const note = decision.status === "approved" ? decision.fragments.map((fragment) => fragment.text).join("\n\n") : "";
+  const lead = sources.find((source) => source.snippet.length > 80)?.snippet ?? "";
+  return NextResponse.json({
+    ...decision,
+    status: "approved",
+    answer: [note, lead].filter(Boolean).join("\n\n"),
+    sources,
+    sourcesLabel: decision.status === "approved" ? "Approved notes and public references" : "Public references",
+    fragments: decision.status === "approved" ? decision.fragments : [],
+  });
 }

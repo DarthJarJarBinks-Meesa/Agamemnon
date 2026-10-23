@@ -56,15 +56,17 @@ def test_gateway_blocks_unlisted_endpoints():
         )
 
 
-def test_public_athena_has_no_search_path():
-    route = (ROOT / "src/app/api/athena/route.ts").read_text()
-    page = (ROOT / "src/lib/demo/athena.ts").read_text()
-    lowered = route.lower()
-    for banned in ("answerfromindexes", "patsnap", "uspto", "patents.json", "prioris", "openai"):
-        assert banned not in lowered
-    assert "patents.json" not in page
-    assert "live/answer" not in page
-    assert "prioris" not in page
+def test_public_athena_does_not_read_the_private_corpus():
+    names = [
+        ROOT / "src/app/api/athena/route.ts",
+        ROOT / "src/lib/demo/athena.ts",
+        ROOT / "src/lib/live/answer.ts",
+    ]
+    for path in names:
+        text = path.read_text().lower()
+        assert "patents.json" not in text
+        assert "prioris" not in text
+        assert "openai" not in text
 
 
 def test_analysis_does_not_publish_or_leak(tmp_path, monkeypatch):

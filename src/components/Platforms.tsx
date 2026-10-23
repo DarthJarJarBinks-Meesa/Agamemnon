@@ -6,7 +6,7 @@ const platforms = [
   {
     name: "Athena",
     href: "/athena",
-    blurb: "Answers from reviewer-approved public notes.",
+    blurb: "Answers technology questions from public references.",
   },
   {
     name: "Sentinel",
