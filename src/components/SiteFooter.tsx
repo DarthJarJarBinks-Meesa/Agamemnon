@@ -15,9 +15,6 @@ export function SiteFooter() {
             <a href="/athena" className="transition hover:text-white">
               Athena demo
             </a>
-            <a href="/sentinel" className="transition hover:text-white">
-              Sentinel demo
-            </a>
             <a href="/prioris" className="transition hover:text-white">
               Prioris demo
             </a>

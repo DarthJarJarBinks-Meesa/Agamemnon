@@ -78,29 +78,6 @@ export function AthenaFlow() {
   );
 }
 
-export function SentinelFlow() {
-  return (
-    <Diagram
-      label="A draft is split. Numbers are held back. A person approves, then the public note is published."
-      width={220}
-      height={320}
-      boxes={[
-        { x: 50, y: 8, w: 120, label: "Draft" },
-        { x: 50, y: 70, w: 120, label: "Split" },
-        { x: 40, y: 132, w: 140, label: "Hold numbers" },
-        { x: 45, y: 194, w: 130, label: "Approve" },
-        { x: 50, y: 256, w: 120, label: "Publish" },
-      ]}
-      lines={[
-        { x1: 110, y1: 44, x2: 110, y2: 70 },
-        { x1: 110, y1: 106, x2: 110, y2: 132 },
-        { x1: 110, y1: 168, x2: 110, y2: 194 },
-        { x1: 110, y1: 230, x2: 110, y2: 256 },
-      ]}
-    />
-  );
-}
-
 export function PriorisFlow() {
   return (
     <Diagram

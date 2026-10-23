@@ -9,11 +9,6 @@ const platforms = [
     blurb: "Answers technology questions from public references.",
   },
   {
-    name: "Sentinel",
-    href: "/sentinel",
-    blurb: "Reviews a draft and withholds numbers until a person approves a public note.",
-  },
-  {
     name: "Prioris",
     href: "/prioris",
     blurb: "Live prior-art search across USPTO records, global patents, and literature.",

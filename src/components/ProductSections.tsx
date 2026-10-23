@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
 import { LazyVideo } from "./LazyVideo";
-import { AthenaFlow, PriorisFlow, SentinelFlow } from "./FlowGraphic";
 
 type ProductSectionProps = {
   id: string;
@@ -8,8 +6,7 @@ type ProductSectionProps = {
   eyebrow: string;
   title: string;
   description: string;
-  videoSrc?: string;
-  graphic?: ReactNode;
+  videoSrc: string;
   reverse?: boolean;
   href?: string;
   cta?: string;
@@ -22,7 +19,6 @@ export function ProductSection({
   title,
   description,
   videoSrc,
-  graphic,
   reverse = false,
   href = "#platforms",
   cta = "Learn more",
@@ -54,12 +50,8 @@ export function ProductSection({
           </a>
         </div>
 
-        <div className={`relative border border-border bg-bg-panel ${graphic ? "" : "overflow-hidden"}`}>
-          {graphic ? (
-            <div className="flex items-center px-8 py-8">{graphic}</div>
-          ) : videoSrc ? (
-            <LazyVideo src={videoSrc} className="aspect-[16/10] w-full object-cover" />
-          ) : null}
+        <div className="relative overflow-hidden border border-border bg-bg-panel">
+          <LazyVideo src={videoSrc} className="aspect-[16/10] w-full object-cover" />
         </div>
       </div>
     </section>
@@ -89,7 +81,7 @@ export function ProductSections() {
         eyebrow="Athena"
         title="Ask how a technology works"
         description="Athena answers ordinary technology questions from public references. A signed note is included when one exists. Restricted requests receive one fixed reply."
-        graphic={<AthenaFlow />}
+        videoSrc="/videos/athena.mp4"
         href="/athena"
         cta="Try the demo"
       />
@@ -100,26 +92,15 @@ export function ProductSections() {
         eyebrow="Prioris"
         title="Prior art search and viability scoring for examiners"
         description="Prioris searches USPTO records, global patent claims, and technical literature, then ranks the closest art and flags novelty and obviousness questions for examiner review."
-        graphic={<PriorisFlow />}
+        videoSrc="/videos/prioris.mp4"
         reverse
         href="/prioris"
         cta="Try the demo"
       />
 
       <ProductSection
-        id="sentinel"
-        index="/0.3"
-        eyebrow="Sentinel"
-        title="Review a draft before it can be quoted"
-        description="Sentinel withholds numbers and proposes a public note from the approved library. A proposal stays unpublished until a person approves that exact text."
-        graphic={<SentinelFlow />}
-        href="/sentinel"
-        cta="Try the demo"
-      />
-
-      <ProductSection
         id="lexicon"
-        index="/0.4"
+        index="/0.3"
         eyebrow="Lexicon"
         title="Classify every active patent into a living taxonomy"
         description="Extend the existing USPTO classification system with model-assisted labels that stay current as technology evolves: searchable, auditable, and examiner-overridable."
@@ -128,7 +109,7 @@ export function ProductSections() {
 
       <ProductSection
         id="nexus"
-        index="/0.5"
+        index="/0.4"
         eyebrow="Nexus"
         title="Streamline examiner and filer interaction"
         description="Nexus replaces fragmented email and portal threads with structured claim discussion, attachment trails, and status that both sides can trust."
@@ -138,7 +119,7 @@ export function ProductSections() {
 
       <ProductSection
         id="vault"
-        index="/0.6"
+        index="/0.5"
         eyebrow="Vault"
         title="Offline, closed-source model trained on patent data"
         description="Vault never phones home. Deploy on air-gapped USPTO infrastructure with a model trained exclusively on patent literature: built for custody, audit, and sovereign control."
