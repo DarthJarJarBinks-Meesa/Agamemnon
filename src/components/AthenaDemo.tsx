@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { AthenaFlow } from "./FlowGraphic";
 
 type Fragment = { id: string; text: string; citation: string };
 type Source = { id: string; title: string; snippet: string; source: string; href: string | null };
@@ -163,14 +164,8 @@ export function AthenaDemo() {
           ))}
         </div>
       </section>
-      <aside className="border border-border bg-bg-elevated p-6">
-        <h2 className="text-xl font-medium tracking-[-0.02em]">How Athena answers</h2>
-        <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-fg-muted">
-          <li>A model checks whether the question is asking for restricted material. The question is the only text it sees.</li>
-          <li>If it is not, Athena looks up a public reference and includes a signed note when one exists.</li>
-          <li>If it is, Athena gives one fixed reply and does not search.</li>
-          <li>Prioris is the prior-art search for a draft application.</li>
-        </ol>
+      <aside className="border border-border bg-bg-elevated p-6" aria-label="How Athena answers">
+        <AthenaFlow />
       </aside>
     </div>
   );

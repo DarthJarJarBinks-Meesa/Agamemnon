@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { SENTINEL_SAMPLE, type SentinelProposal, type SentinelReview } from "@/lib/demo/sentinel";
+import { SentinelFlow } from "./FlowGraphic";
 
 type ProposalStatus = "REVIEW_REQUIRED" | "APPROVED" | "REJECTED" | "PUBLISHED" | "REVOKED";
 type ProposalState = Omit<SentinelProposal, "status"> & { status: ProposalStatus };
@@ -131,23 +132,18 @@ export function SentinelDemo() {
         ) : null}
       </section>
 
-      <aside className="border border-border bg-bg-elevated p-6">
-        <h2 className="text-xl font-medium tracking-[-0.02em]">What Athena could say</h2>
-        <p className="mt-3 text-sm leading-relaxed text-fg-muted">
-          Publish adds a note to this browser only. It does not change Athena for anyone else, and it never copies a withheld sentence.
-        </p>
-        <div className="mt-5 space-y-4">
-          {published.length ? (
-            published.map((item) => (
+      <aside className="border border-border bg-bg-elevated p-6" aria-label="How Sentinel reviews">
+        <SentinelFlow />
+        {published.length ? (
+          <div className="mt-6 space-y-4 border-t border-border pt-4">
+            {published.map((item) => (
               <div key={item.id}>
                 <p className="text-sm leading-relaxed text-fg">{item.text}</p>
                 <p className="mt-1 text-xs text-fg-muted">{item.citation}</p>
               </div>
-            ))
-          ) : (
-            <p className="text-sm text-fg-muted">Nothing is published yet.</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : null}
       </aside>
     </div>
   );

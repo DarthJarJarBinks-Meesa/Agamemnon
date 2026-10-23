@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import { LazyVideo } from "./LazyVideo";
+import { AthenaFlow, PriorisFlow, SentinelFlow } from "./FlowGraphic";
 
 type ProductSectionProps = {
   id: string;
@@ -7,6 +9,7 @@ type ProductSectionProps = {
   title: string;
   description: string;
   videoSrc?: string;
+  graphic?: ReactNode;
   reverse?: boolean;
   href?: string;
   cta?: string;
@@ -19,6 +22,7 @@ export function ProductSection({
   title,
   description,
   videoSrc,
+  graphic,
   reverse = false,
   href = "#platforms",
   cta = "Learn more",
@@ -50,16 +54,12 @@ export function ProductSection({
           </a>
         </div>
 
-        <div className="relative overflow-hidden border border-border bg-bg-panel">
-          {videoSrc ? (
+        <div className={`relative border border-border bg-bg-panel ${graphic ? "" : "overflow-hidden"}`}>
+          {graphic ? (
+            <div className="flex items-center px-8 py-8">{graphic}</div>
+          ) : videoSrc ? (
             <LazyVideo src={videoSrc} className="aspect-[16/10] w-full object-cover" />
-          ) : (
-            <ol className="flex aspect-[16/10] flex-col justify-center gap-4 px-8 text-sm leading-relaxed text-fg-muted">
-              <li>1. Split the draft into separate facts.</li>
-              <li>2. Hold back any sentence that contains a number.</li>
-              <li>3. Propose a public note. Publish it only after approval.</li>
-            </ol>
-          )}
+          ) : null}
         </div>
       </div>
     </section>
@@ -89,7 +89,7 @@ export function ProductSections() {
         eyebrow="Athena"
         title="Ask how a technology works"
         description="Athena answers ordinary technology questions from public references. A signed note is included when one exists. Restricted requests receive one fixed reply."
-        videoSrc="/videos/athena.mp4"
+        graphic={<AthenaFlow />}
         href="/athena"
         cta="Try the demo"
       />
@@ -100,7 +100,7 @@ export function ProductSections() {
         eyebrow="Prioris"
         title="Prior art search and viability scoring for examiners"
         description="Prioris searches USPTO records, global patent claims, and technical literature, then ranks the closest art and flags novelty and obviousness questions for examiner review."
-        videoSrc="/videos/prioris.mp4"
+        graphic={<PriorisFlow />}
         reverse
         href="/prioris"
         cta="Try the demo"
@@ -112,6 +112,7 @@ export function ProductSections() {
         eyebrow="Sentinel"
         title="Review a draft before it can be quoted"
         description="Sentinel withholds numbers and proposes a public note from the approved library. A proposal stays unpublished until a person approves that exact text."
+        graphic={<SentinelFlow />}
         href="/sentinel"
         cta="Try the demo"
       />

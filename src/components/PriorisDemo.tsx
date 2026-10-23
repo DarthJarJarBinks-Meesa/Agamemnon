@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { PriorisFlow } from "./FlowGraphic";
 import type { PriorisReport } from "@/lib/demo/prioris-types";
 import { priorisPdfPath, usptoPdfUrl } from "@/lib/prioris/pdf";
 
@@ -102,7 +103,8 @@ export function PriorisDemo() {
   const columns = report?.candidates.slice(0, 4) ?? [];
 
   return (
-    <div className="mt-12">
+    <>
+    <div className="mt-12 grid items-start gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.7fr)]">
       <form onSubmit={onSubmit} className="grid gap-4 border border-border bg-bg-panel p-4 md:p-6">
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-2 text-xs text-fg-muted">
@@ -147,11 +149,12 @@ export function PriorisDemo() {
             className="min-h-40 w-full border border-border bg-bg px-3 py-3 text-sm leading-relaxed text-fg outline-none placeholder:text-fg-dim"
           />
         </label>
-        <p className="text-sm text-fg-muted">
-          Public demonstration key: analyst. Prioris sends a keyword query from the claims to USPTO and PatSnap. The application text is not stored.
-        </p>
         {error ? <p className="text-sm text-white">{error}</p> : null}
       </form>
+      <aside className="border border-border bg-bg-elevated p-6" aria-label="How Prioris searches">
+        <PriorisFlow />
+      </aside>
+    </div>
 
       {report ? (
         <div className="mt-6 space-y-4">
@@ -337,6 +340,6 @@ export function PriorisDemo() {
           </p>
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
