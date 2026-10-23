@@ -8,6 +8,8 @@ type ProductSectionProps = {
   description: string;
   videoSrc: string;
   reverse?: boolean;
+  href?: string;
+  cta?: string;
 };
 
 export function ProductSection({
@@ -18,6 +20,8 @@ export function ProductSection({
   description,
   videoSrc,
   reverse = false,
+  href = "#platforms",
+  cta = "Learn more",
 }: ProductSectionProps) {
   return (
     <section
@@ -39,10 +43,10 @@ export function ProductSection({
             {description}
           </p>
           <a
-            href="#platforms"
+            href={href}
             className="mt-8 inline-flex h-10 items-center border border-border-strong px-4 text-sm transition hover:bg-white hover:text-black"
           >
-            Learn more
+            {cta}
           </a>
         </div>
 
@@ -81,6 +85,8 @@ export function ProductSections() {
         title="Ask nonsensitive questions across the classified patent corpus"
         description="A chatbot interface for inventors, counsel, and the public to explore active USPTO patents without exposing restricted examination material. Answers stay within nonsensitive disclosure boundaries."
         videoSrc="/videos/athena.mp4"
+        href="/athena"
+        cta="Try the demo"
       />
 
       <ProductSection
@@ -91,6 +97,8 @@ export function ProductSections() {
         description="Prioris reads claims against the full historical corpus, ranks relevant art, and surfaces novelty and obviousness signals so examiners can move faster with higher confidence."
         videoSrc="/videos/prioris.mp4"
         reverse
+        href="/prioris"
+        cta="Try the demo"
       />
 
       <ProductSection

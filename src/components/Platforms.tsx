@@ -5,22 +5,27 @@ import { useRequestAccess } from "./RequestAccessModal";
 const platforms = [
   {
     name: "Athena",
+    href: "/athena",
     blurb: "Public-safe patent chatbot for nonsensitive inquiry.",
   },
   {
     name: "Prioris",
+    href: "/prioris",
     blurb: "Examiner prior-art and viability engine.",
   },
   {
     name: "Lexicon",
+    href: "#lexicon",
     blurb: "Living classification across active USPTO patents.",
   },
   {
     name: "Nexus",
+    href: "#nexus",
     blurb: "Structured examiner–filer collaboration.",
   },
   {
     name: "Vault",
+    href: "#vault",
     blurb: "Offline closed-source patent foundation model.",
   },
 ];
@@ -45,7 +50,7 @@ export function Platforms() {
           {platforms.map((platform) => (
             <a
               key={platform.name}
-              href={`#${platform.name.toLowerCase()}`}
+              href={platform.href}
               className="group bg-bg-elevated p-6 transition hover:bg-bg-panel"
             >
               <h3 className="text-lg font-medium group-hover:underline group-hover:underline-offset-4">

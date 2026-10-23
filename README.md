@@ -35,7 +35,7 @@ The corpus is synthetic: about 60 fictional patents, simulated disclosure labels
 
 ## Marketing homepage
 
-The Next.js site in this repo is separate. From the same environment that has Node installed:
+The Next.js site in this repo includes the public demos at `/athena` and `/prioris`. From the same environment that has Node installed:
 
 ```bash
 npm install

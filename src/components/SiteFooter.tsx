@@ -10,9 +10,19 @@ export function SiteFooter() {
             Offline patent intelligence for examiners, filers, and the public.
           </p>
         </div>
-        <p className="text-xs text-fg-dim">
-          © {new Date().getFullYear()} Agamemnon. All rights reserved.
-        </p>
+        <div className="flex flex-col gap-3 sm:items-end">
+          <nav className="flex gap-4 text-sm text-fg-muted" aria-label="Demos">
+            <a href="/athena" className="transition hover:text-white">
+              Athena demo
+            </a>
+            <a href="/prioris" className="transition hover:text-white">
+              Prioris demo
+            </a>
+          </nav>
+          <p className="text-xs text-fg-dim">
+            © {new Date().getFullYear()} Agamemnon. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );

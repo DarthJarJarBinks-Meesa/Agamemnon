@@ -77,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-bg text-fg font-sans">{children}</body>
