@@ -3,7 +3,8 @@
 import { FormEvent, useState } from "react";
 import { SENTINEL_SAMPLE, type SentinelProposal, type SentinelReview } from "@/lib/demo/sentinel";
 
-type ProposalState = SentinelProposal & { status: "REVIEW_REQUIRED" | "APPROVED" | "REJECTED" | "PUBLISHED" | "REVOKED" };
+type ProposalStatus = "REVIEW_REQUIRED" | "APPROVED" | "REJECTED" | "PUBLISHED" | "REVOKED";
+type ProposalState = Omit<SentinelProposal, "status"> & { status: ProposalStatus };
 
 export function SentinelDemo() {
   const [text, setText] = useState("");
