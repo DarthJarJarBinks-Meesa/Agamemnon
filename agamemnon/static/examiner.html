@@ -29,7 +29,20 @@
       <p class="error" id="error" role="status"></p>
     </form>
     <div id="out"></div>
-    <footer>Analyst process on port 8001. It reads corpus.db and jobs.db and does not contact USPTO or Google Patents.</footer>
+    <section class="controls" id="sentinel">
+      <h2>Sentinel review</h2>
+      <p class="lede">This queue is private. Analysis proposes a public note and cannot publish it. Approve, then publish, then revoke. The public assistant never calls these routes.</p>
+      <div class="row">
+        <label>Document id
+          <input id="sentinel-doc" value="US-SEC-2001">
+        </label>
+        <button type="button" class="secondary" id="sentinel-analyze">Analyze</button>
+        <button type="button" class="secondary" id="sentinel-queue">Show queue</button>
+      </div>
+      <p class="error" id="sentinel-error" role="status"></p>
+      <div id="sentinel-out"></div>
+    </section>
+    <footer>Analyst process on port 8001. It reads the private corpus and does not contact USPTO or Google Patents. Athena cannot call this process.</footer>
   </div>
   <script>
     const password = document.querySelector("#password");
@@ -141,6 +154,68 @@
         + anticipation + obvious + dupeNote + chart + internal
         + "<p class=\"note\">" + esc(report.corpus_limitation) + " " + esc(report.disclaimer) + "</p>";
     }
+
+    const sentinelError = document.querySelector("#sentinel-error");
+    const sentinelOut = document.querySelector("#sentinel-out");
+
+    async function sentinel(path, options) {
+      sentinelError.textContent = "";
+      const response = await fetch(path, { ...options, headers: { ...headers(), ...(options && options.headers) } });
+      const data = await response.json();
+      if (!response.ok) {
+        sentinelError.textContent = data.detail || "The review did not complete.";
+        return null;
+      }
+      return data;
+    }
+
+    function reviewButtons(id) {
+      const actions = [
+        ["approve", "decision"],
+        ["reject", "decision"],
+        ["publish", "publish"],
+        ["revoke", "revoke"],
+      ];
+      return actions.map(([name]) => "<button type=\"button\" class=\"secondary\" data-act=\"" + name + "\" data-id=\"" + esc(id) + "\">" + name + "</button>").join(" ");
+    }
+
+    document.querySelector("#sentinel-analyze").addEventListener("click", async () => {
+      const data = await sentinel("/internal/sentinel/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ document_id: document.querySelector("#sentinel-doc").value.trim() }),
+      });
+      if (!data) return;
+      sentinelOut.innerHTML = "<pre class=\"note\">" + esc(JSON.stringify(data, null, 2)) + "</pre>";
+    });
+
+    document.querySelector("#sentinel-queue").addEventListener("click", async () => {
+      const data = await sentinel("/internal/sentinel/reviews");
+      if (!data) return;
+      sentinelOut.innerHTML = data.reviews.map((item) =>
+        "<p class=\"note\"><strong>" + esc(item.id) + "</strong> " + esc(item.topic) + " " + esc(item.status) + "<br>" + reviewButtons(item.id) + "</p>"
+      ).join("") || "<p class=\"note\">The queue is empty.</p>";
+    });
+
+    sentinelOut.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-act]");
+      if (!button) return;
+      const id = button.getAttribute("data-id");
+      const act = button.getAttribute("data-act");
+      let path = "/internal/sentinel/releases/" + encodeURIComponent(id) + "/" + act;
+      let options = { method: "POST" };
+      if (act === "approve" || act === "reject") {
+        path = "/internal/sentinel/reviews/" + encodeURIComponent(id) + "/decision";
+        options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ decision: act, reviewer: "examiner" }),
+        };
+      }
+      const data = await sentinel(path, options);
+      if (!data) return;
+      button.insertAdjacentHTML("afterend", "<span class=\"note\"> " + esc(data.status) + "</span>");
+    });
   </script>
 </body>
 </html>

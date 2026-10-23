@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import type { PriorisReport } from "@/lib/demo/prioris-types";
+import { priorisPdfPath, usptoPdfUrl } from "@/lib/prioris/pdf";
 
 function labelText(label: string) {
   if (label === "explicit") return "Explicitly disclosed";
@@ -15,12 +16,32 @@ function labelClass(label: string) {
   return "text-fg-dim";
 }
 
+function PdfButton({ id, onOpen }: { id: string; onOpen: (id: string) => void }) {
+  if (!usptoPdfUrl(id)) return null;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(id)}
+      className="ml-2 font-sans text-[11px] tracking-normal text-white normal-case underline underline-offset-4"
+    >
+      PDF
+    </button>
+  );
+}
+
 export function PriorisDemo() {
   const [demoKey, setDemoKey] = useState("analyst");
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [report, setReport] = useState<PriorisReport | null>(null);
+  const [pdf, setPdf] = useState<{ id: string; direct: string; src: string } | null>(null);
+
+  function showPdf(id: string) {
+    const direct = usptoPdfUrl(id);
+    if (!direct) return;
+    setPdf({ id, direct, src: priorisPdfPath(id, demoKey) });
+  }
 
   function headers() {
     return { "X-Demo-Key": demoKey, "Content-Type": "application/json" };
@@ -45,6 +66,7 @@ export function PriorisDemo() {
       setError("Load the sample or paste an application.");
       return;
     }
+    setPdf(null);
     setBusy(true);
     try {
       const response = await fetch("/api/prioris", {
@@ -145,6 +167,17 @@ export function PriorisDemo() {
               ? `Compared with ${report.filingDate} because the application did not include a filing date.`
               : `Compared with filing date ${report.filingDate}.`}
           </p>
+          {pdf ? (
+            <section className="border border-border bg-bg-panel">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+                <p className="text-fg">{pdf.id}</p>
+                <a href={pdf.direct} target="_blank" rel="noreferrer" className="text-white underline underline-offset-4">
+                  Open the USPTO PDF
+                </a>
+              </div>
+              <iframe title={`Patent PDF ${pdf.id}`} src={pdf.src} className="h-[75vh] w-full bg-white" />
+            </section>
+          ) : null}
           <section className="grid border border-border bg-bg-elevated sm:grid-cols-3">
             {[
               [report.claimsParsed, "Claims parsed"],
@@ -187,6 +220,7 @@ export function PriorisDemo() {
                         ) : (
                           candidate.patentId
                         )}
+                        <PdfButton id={candidate.patentId} onOpen={showPdf} />
                         <span className="mt-1 block font-sans text-xs tracking-normal text-fg-muted normal-case">
                           {candidate.title}
                         </span>
@@ -230,8 +264,8 @@ export function PriorisDemo() {
                       </a>
                     ) : (
                       item.patentId
-                    )}{" "}
-                    — {item.title}. {item.explicitCount} explicit, {item.partialCount} partial. {item.source}.
+                    )}
+                    <PdfButton id={item.patentId} onOpen={showPdf} /> — {item.title}. {item.explicitCount} explicit, {item.partialCount} partial. {item.source}.
                   </li>
                 ))}
               </ul>
@@ -244,7 +278,8 @@ export function PriorisDemo() {
               <ul className="mt-3 list-disc space-y-2 pl-5">
                 {report.internalOverlap.map((item) => (
                   <li key={item.patentId}>
-                    {item.patentId} — {item.eligibilityReason}
+                    {item.patentId}
+                    <PdfButton id={item.patentId} onOpen={showPdf} /> — {item.eligibilityReason}
                   </li>
                 ))}
               </ul>
@@ -263,8 +298,8 @@ export function PriorisDemo() {
                       </a>
                     ) : (
                       item.id
-                    )}{" "}
-                    — {item.title}
+                    )}
+                    <PdfButton id={item.id} onOpen={showPdf} /> — {item.title}
                     {item.assignee ? `, ${item.assignee}` : ""}
                     {item.filingDate ? `, filed ${item.filingDate}` : ""}
                     {item.publicationDate ? `, published ${item.publicationDate}` : ""}. Bibliographic match. Claim text was not retrieved for this record.

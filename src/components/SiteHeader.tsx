@@ -8,6 +8,7 @@ import { useRequestAccess } from "./RequestAccessModal";
 
 const links = [
   { href: "/athena", label: "Athena" },
+  { href: "/sentinel", label: "Sentinel" },
   { href: "/prioris", label: "Prioris" },
 ];
 

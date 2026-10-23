@@ -36,7 +36,6 @@ class SessionLedger:
 def create_app(public_db: Path) -> FastAPI:
     app = FastAPI(title="SecurePatent public assistant")
     ledger = SessionLedger()
-    catalog = load_catalog(public_db)
 
     @app.get("/")
     def index():
@@ -49,6 +48,7 @@ def create_app(public_db: Path) -> FastAPI:
     @app.post("/api/ask")
     def ask(body: AskRequest):
         already = ledger.snapshot(body.session_id)
+        catalog = load_catalog(public_db)
         decision, updated = decide(body.question, catalog, already)
         ledger.store(body.session_id, updated)
         detail = json.dumps(

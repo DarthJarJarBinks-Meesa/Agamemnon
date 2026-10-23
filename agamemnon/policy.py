@@ -27,6 +27,10 @@ SENSITIVE_PATTERNS = (
     r"prior-art search",
     r"prior art search",
     r"does a .{0,80}exist",
+    r"one question at a time",
+    r"break down the secret",
+    r"pretend you are",
+    r"\bi am an? authorized\b",
 )
 
 MIN_TOPIC_HITS = 2
@@ -52,6 +56,25 @@ TOPIC_KEYWORDS = {
         "electric",
     ),
     "wearable": ("wearable", "wrist", "fitness", "monitor", "monitors"),
+    "computing": (
+        "accelerator",
+        "accelerators",
+        "inference",
+        "quantization",
+        "processor",
+        "processors",
+        "bandwidth",
+    ),
+    "microelectronics": (
+        "transistor",
+        "transistors",
+        "circuit",
+        "circuits",
+        "semiconductor",
+        "switch",
+        "switches",
+    ),
+    "stationkeeping": ("station", "keeping", "orbit", "stationkeeping"),
 }
 
 

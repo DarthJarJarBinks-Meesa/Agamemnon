@@ -84,7 +84,7 @@ def test_public_import_graph_excludes_corpus_builder():
         "import agamemnon.public_server\n"
         "import agamemnon.policy\n"
         "import agamemnon.catalog\n"
-        "for name in ('agamemnon.fixture_spec', 'agamemnon.seed', 'agamemnon.retrieval', 'agamemnon.analyze'):\n"
+        "for name in ('agamemnon.fixture_spec', 'agamemnon.seed', 'agamemnon.retrieval', 'agamemnon.analyze', 'agamemnon.sentinel', 'agamemnon.sentinel.workflow'):\n"
         "    assert name not in sys.modules, name\n"
     )
     subprocess.run([sys.executable, "-c", code, str(ROOT)], check=True)

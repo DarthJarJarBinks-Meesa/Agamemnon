@@ -6,7 +6,12 @@ const platforms = [
   {
     name: "Athena",
     href: "/athena",
-    blurb: "Public-safe patent chatbot for nonsensitive inquiry.",
+    blurb: "Answers from reviewer-approved public notes.",
+  },
+  {
+    name: "Sentinel",
+    href: "/sentinel",
+    blurb: "Reviews a draft and withholds numbers until a person approves a public note.",
   },
   {
     name: "Prioris",
@@ -46,7 +51,7 @@ export function Platforms() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-14 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {platforms.map((platform) => (
             <a
               key={platform.name}

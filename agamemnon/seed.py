@@ -10,6 +10,7 @@ from agamemnon.fixture_spec import (
     fragments,
 )
 from agamemnon.paths import FIXTURES, runtime_paths
+from agamemnon.sentinel.store import build_sentinel
 
 
 def build_public(path: Path) -> None:
@@ -99,6 +100,8 @@ def ensure_runtime(root: Path | None = None) -> dict[str, Path]:
         build_corpus(paths["corpus"])
     if not paths["jobs"].exists():
         build_jobs(paths["jobs"])
+    if not paths["sentinel"].exists():
+        build_sentinel(paths["sentinel"])
     return paths
 
 
@@ -107,10 +110,12 @@ def main() -> None:
     build_public(paths["public"])
     build_corpus(paths["corpus"])
     build_jobs(paths["jobs"])
+    build_sentinel(paths["sentinel"])
     export_fixtures()
-    print(f"public  {paths['public']}")
-    print(f"corpus  {paths['corpus']}")
-    print(f"jobs    {paths['jobs']}")
+    print(f"public    {paths['public']}")
+    print(f"corpus    {paths['corpus']}")
+    print(f"jobs      {paths['jobs']}")
+    print(f"sentinel  {paths['sentinel']}")
 
 
 if __name__ == "__main__":

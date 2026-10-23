@@ -6,7 +6,7 @@ type ProductSectionProps = {
   eyebrow: string;
   title: string;
   description: string;
-  videoSrc: string;
+  videoSrc?: string;
   reverse?: boolean;
   href?: string;
   cta?: string;
@@ -51,10 +51,15 @@ export function ProductSection({
         </div>
 
         <div className="relative overflow-hidden border border-border bg-bg-panel">
-          <LazyVideo
-            src={videoSrc}
-            className="aspect-[16/10] w-full object-cover"
-          />
+          {videoSrc ? (
+            <LazyVideo src={videoSrc} className="aspect-[16/10] w-full object-cover" />
+          ) : (
+            <ol className="flex aspect-[16/10] flex-col justify-center gap-4 px-8 text-sm leading-relaxed text-fg-muted">
+              <li>1. Split the draft into separate facts.</li>
+              <li>2. Hold back any sentence that contains a number.</li>
+              <li>3. Propose a public note. Publish it only after approval.</li>
+            </ol>
+          )}
         </div>
       </div>
     </section>
@@ -82,8 +87,8 @@ export function ProductSections() {
         id="athena"
         index="/0.1"
         eyebrow="Athena"
-        title="Ask nonsensitive questions across the classified patent corpus"
-        description="A chatbot interface for inventors, counsel, and the public to explore active USPTO patents without exposing restricted examination material. Answers stay within nonsensitive disclosure boundaries."
+        title="Ask about approved public science"
+        description="Athena answers from reviewer-signed public notes. It does not read private patents or send a question to a patent office. Restricted requests receive one fixed reply."
         videoSrc="/videos/athena.mp4"
         href="/athena"
         cta="Try the demo"
@@ -102,8 +107,18 @@ export function ProductSections() {
       />
 
       <ProductSection
-        id="lexicon"
+        id="sentinel"
         index="/0.3"
+        eyebrow="Sentinel"
+        title="Review a draft before it can be quoted"
+        description="Sentinel withholds numbers and proposes a public note from the approved library. A proposal stays unpublished until a person approves that exact text."
+        href="/sentinel"
+        cta="Try the demo"
+      />
+
+      <ProductSection
+        id="lexicon"
+        index="/0.4"
         eyebrow="Lexicon"
         title="Classify every active patent into a living taxonomy"
         description="Extend the existing USPTO classification system with model-assisted labels that stay current as technology evolves: searchable, auditable, and examiner-overridable."
@@ -112,7 +127,7 @@ export function ProductSections() {
 
       <ProductSection
         id="nexus"
-        index="/0.4"
+        index="/0.5"
         eyebrow="Nexus"
         title="Streamline examiner and filer interaction"
         description="Nexus replaces fragmented email and portal threads with structured claim discussion, attachment trails, and status that both sides can trust."
@@ -122,7 +137,7 @@ export function ProductSections() {
 
       <ProductSection
         id="vault"
-        index="/0.5"
+        index="/0.6"
         eyebrow="Vault"
         title="Offline, closed-source model trained on patent data"
         description="Vault never phones home. Deploy on air-gapped USPTO infrastructure with a model trained exclusively on patent literature: built for custody, audit, and sovereign control."

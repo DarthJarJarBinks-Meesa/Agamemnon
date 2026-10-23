@@ -73,6 +73,27 @@ def fragments() -> list[dict]:
                 "here stay at that general level."
             ),
         },
+        {
+            "id": "AI-1",
+            "topic": "computing",
+            "citation": "Approved educational note AI-1",
+            "text": (
+                "Specialized processors make AI inference more efficient by performing many "
+                "arithmetic operations at once and by moving less data between memory and the "
+                "processor. Quantization represents numbers with fewer bits, which reduces "
+                "memory bandwidth. These techniques are established in public computer architecture."
+            ),
+        },
+        {
+            "id": "ME-1",
+            "topic": "microelectronics",
+            "citation": "Approved educational note ME-1",
+            "text": (
+                "A transistor in an integrated circuit acts as a small switch. Complementary "
+                "pairs of switches draw little current while holding a value, which is the usual "
+                "way public designs limit power. This description stays at that textbook level."
+            ),
+        },
     ]
 
 
@@ -95,6 +116,18 @@ def bundles() -> list[dict]:
             "topic": "wearable",
             "fragment_ids": ["WR-1"],
             "description": "Approved wearable-monitor background",
+        },
+        {
+            "id": "B-AI",
+            "topic": "computing",
+            "fragment_ids": ["AI-1"],
+            "description": "Approved computing background",
+        },
+        {
+            "id": "B-ME",
+            "topic": "microelectronics",
+            "fragment_ids": ["ME-1"],
+            "description": "Approved microelectronics background",
         },
     ]
 

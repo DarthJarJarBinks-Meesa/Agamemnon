@@ -22,12 +22,18 @@ const SENSITIVE = [
   /prior-art search/i,
   /prior art search/i,
   /does a .{0,80}exist/i,
+  /one question at a time/i,
+  /break down the secret/i,
+  /pretend you are/i,
+  /\bi am an? authorized\b/i,
 ];
 
 const TOPIC_KEYWORDS: Record<string, string[]> = {
   oxygenation: ["oxygenation", "oximetry", "blood", "wavelength", "absorption", "optical", "spo2"],
   propulsion: ["propulsion", "thruster", "thrusters", "ion", "hall", "spacecraft", "propellant", "electric"],
   wearable: ["wearable", "wrist", "fitness", "monitor", "monitors"],
+  computing: ["accelerator", "accelerators", "inference", "quantization", "processor", "processors", "bandwidth"],
+  microelectronics: ["transistor", "transistors", "circuit", "circuits", "semiconductor", "switch", "switches"],
 };
 
 export type Fragment = {
@@ -48,6 +54,11 @@ export type AthenaDecision = {
 
 function normalize(question: string) {
   return question.replaceAll("\u0000", "").replace(/\s+/g, " ").trim().slice(0, 2000);
+}
+
+export function isSensitiveQuestion(question: string) {
+  const normalized = normalize(question);
+  return !normalized || SENSITIVE.some((pattern) => pattern.test(normalized));
 }
 
 function topicFor(question: string) {
@@ -75,7 +86,7 @@ export function decideAthena(question: string, already: string[], maxBundles = 3
   });
 
   const normalized = normalize(question);
-  if (!normalized || SENSITIVE.some((pattern) => pattern.test(normalized))) {
+  if (isSensitiveQuestion(normalized)) {
     return refuse("no_approved_material", NO_APPROVED);
   }
 

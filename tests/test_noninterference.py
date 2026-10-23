@@ -62,3 +62,7 @@ def test_eval_report(tmp_path):
     assert report["prior_art"]["limitation_coverage"] == 1
     assert report["prior_art"]["anticipation_reference"] == ["US-PUB-1010"]
     assert report["alt_markers_present_in_public_answers"] == []
+    assert report["sentinel"]["canary_leakage"] == 0
+    assert report["sentinel"]["unauthorized_publish"] is False
+    assert report["sentinel"]["review_required"] is True
+    assert report["sentinel"]["candidates"] > 0

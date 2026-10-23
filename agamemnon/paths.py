@@ -16,4 +16,5 @@ def runtime_paths(root: Path | None = None) -> dict[str, Path]:
         "public": base / "public.db",
         "corpus": base / "corpus.db",
         "jobs": base / "jobs.db",
+        "sentinel": base / "sentinel.db",
     }

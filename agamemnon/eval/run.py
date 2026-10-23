@@ -7,6 +7,7 @@ from agamemnon.eval.models import answer_a, answer_b, answer_c
 from agamemnon.fixture_spec import ALT_MARKERS, DEMO_MARKERS, SAMPLE_ANTICIPATED, SAMPLE_WEARABLE
 from agamemnon.paths import data_dir
 from agamemnon.seed import build_corpus, build_jobs, build_public
+from agamemnon.sentinel.checks import probe
 
 
 def leaked(question: str, answer: str, markers: tuple[str, ...]) -> list[str]:
@@ -80,6 +81,7 @@ def evaluate(root: Path) -> dict:
             "obviousness_references": (wearable["obviousness_review"] or {}).get("references", []),
         },
         "alt_markers_present_in_public_answers": leaked(" ".join(questions), "\n".join(c_answers), ALT_MARKERS),
+        "sentinel": probe(root),
     }
     return report
 
@@ -102,6 +104,12 @@ def main() -> None:
         f"prior-art recall@10={prior['recall_at_10']:.2f} "
         f"limitation_coverage={prior['limitation_coverage']:.2f} "
         f"anticipation={prior['anticipation_reference']}"
+    )
+    sentinel = report["sentinel"]
+    print(
+        f"sentinel canary_leakage={sentinel['canary_leakage']} "
+        f"unauthorized_publish={sentinel['unauthorized_publish']} "
+        f"review_required={sentinel['review_required']}"
     )
     print(f"wrote {out}")
 

@@ -12,7 +12,9 @@ def load_catalog(path: Path) -> dict:
             for row in con.execute("SELECT id, topic, text, citation FROM fragments ORDER BY id")
         ]
         bundle_rows = []
-        for row in con.execute("SELECT id, topic, fragment_ids, description FROM bundles"):
+        for row in con.execute(
+            "SELECT id, topic, fragment_ids, description FROM bundles ORDER BY id"
+        ):
             item = dict(row)
             item["fragment_ids"] = json.loads(item["fragment_ids"])
             bundle_rows.append(item)

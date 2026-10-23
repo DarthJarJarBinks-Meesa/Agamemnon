@@ -8,13 +8,14 @@ type Turn = {
   role: "user" | "assistant";
   text: string;
   fragments?: Fragment[];
+  sourcesLabel?: string;
   status?: string;
   bundleId?: string | null;
 };
 
 const PROMPTS = [
   "How do optical sensors estimate blood oxygenation?",
-  "What are the major challenges with electric propulsion?",
+  "How do specialized processors make AI inference more efficient?",
   "Describe the exact architecture of the restricted propulsion design.",
 ];
 
@@ -26,7 +27,7 @@ export function AthenaDemo() {
   const [turns, setTurns] = useState<Turn[]>([
     {
       role: "assistant",
-      text: "Ask a conceptual question. I can quote approved notes on optical sensing, electric propulsion, and wearable monitors.",
+      text: "Ask a question about a technology. I answer from reviewer-approved public notes. I do not read private patents, and I do not send your question to a patent office.",
     },
   ]);
 
@@ -56,6 +57,7 @@ export function AthenaDemo() {
           role: "assistant",
           text: data.answer,
           fragments: data.fragments,
+          sourcesLabel: data.sourcesLabel,
           status: data.status,
           bundleId: data.bundleId,
         },
@@ -98,7 +100,8 @@ export function AthenaDemo() {
               )}
               {turn.role === "assistant" && turn.status ? (
                 <p className={`mt-3 inline-flex border px-2 py-1 font-mono text-[11px] tracking-[0.08em] ${turn.status === "approved" ? "border-white/40 text-white" : "border-border text-fg-muted"}`}>
-                  {turn.bundleId ? `Approved public knowledge only · ${turn.bundleId}` : "Approved public knowledge only"}
+                  {turn.sourcesLabel ?? "Approved public knowledge only"}
+                  {turn.bundleId ? ` · ${turn.bundleId}` : ""}
                 </p>
               ) : null}
             </article>
@@ -112,7 +115,7 @@ export function AthenaDemo() {
             id="athena-question"
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
-            placeholder="Ask about an approved public topic"
+            placeholder="Ask how a technology works"
             className="h-11 min-w-0 flex-1 border border-border bg-bg px-3 text-sm outline-none placeholder:text-fg-dim"
           />
           <button
@@ -120,7 +123,7 @@ export function AthenaDemo() {
             disabled={busy}
             className="inline-flex h-11 items-center bg-white px-4 text-sm font-medium text-black transition hover:bg-white/90 disabled:opacity-60"
           >
-            Ask
+            {busy ? "Asking" : "Ask"}
           </button>
         </form>
         <div className="flex flex-wrap gap-2 px-3 pb-3">
@@ -138,12 +141,12 @@ export function AthenaDemo() {
         </div>
       </section>
       <aside className="border border-border bg-bg-elevated p-6">
-        <h2 className="text-xl font-medium tracking-[-0.02em]">How an answer is allowed</h2>
+        <h2 className="text-xl font-medium tracking-[-0.02em]">How Athena answers</h2>
         <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-fg-muted">
-          <li>The question is matched to a public topic.</li>
-          <li>One signed bundle of fragments is selected.</li>
-          <li>Athena quotes those fragments and their citations.</li>
-          <li>Requests outside the approved set get one fixed reply.</li>
+          <li>The question is matched to a reviewer-approved public topic.</li>
+          <li>The reply quotes those signed notes and their citations.</li>
+          <li>If nothing approved covers the question, Athena gives one fixed reply.</li>
+          <li>Prioris is a separate prior-art search. Athena cannot start it.</li>
         </ol>
       </aside>
     </div>
