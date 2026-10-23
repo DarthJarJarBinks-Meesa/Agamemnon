@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { useRequestAccess } from "./RequestAccessModal";
-
-const links = [
-  { href: "/athena", label: "Athena" },
-  { href: "/prioris", label: "Prioris" },
-];
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const { openModal } = useRequestAccess();
-  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -34,20 +27,6 @@ export function SiteHeader() {
       </Link>
 
       <div className="flex items-center gap-3 sm:gap-5">
-        <nav className="flex items-center gap-3 sm:gap-4" aria-label="Demos">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-[13px] transition hover:text-white ${
-                pathname === link.href ? "text-white" : "text-fg-muted"
-              }`}
-              aria-current={pathname === link.href ? "page" : undefined}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
         <button
           type="button"
           onClick={openModal}

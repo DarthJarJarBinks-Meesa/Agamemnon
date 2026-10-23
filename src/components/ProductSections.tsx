@@ -82,8 +82,6 @@ export function ProductSections() {
         title="Ask how a technology works"
         description="Athena answers ordinary technology questions from public references. A signed note is included when one exists. Restricted requests receive one fixed reply."
         videoSrc="/videos/athena.mp4"
-        href="/athena"
-        cta="Try the demo"
       />
 
       <ProductSection
@@ -94,8 +92,6 @@ export function ProductSections() {
         description="Prioris searches USPTO records, global patent claims, and technical literature, then ranks the closest art and flags novelty and obviousness questions for examiner review."
         videoSrc="/videos/prioris.mp4"
         reverse
-        href="/prioris"
-        cta="Try the demo"
       />
 
       <ProductSection

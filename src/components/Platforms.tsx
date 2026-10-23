@@ -5,12 +5,12 @@ import { useRequestAccess } from "./RequestAccessModal";
 const platforms = [
   {
     name: "Athena",
-    href: "/athena",
+    href: "#athena",
     blurb: "Answers technology questions from public references.",
   },
   {
     name: "Prioris",
-    href: "/prioris",
+    href: "#prioris",
     blurb: "Live prior-art search across USPTO records, global patents, and literature.",
   },
   {
