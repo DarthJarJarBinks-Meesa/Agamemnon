@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SecurePatent public assistant</title>
+  <link rel="stylesheet" href="/static/public.css">
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <p class="mark">SECUREPATENT</p>
+        <h1>Public knowledge assistant</h1>
+      </div>
+      <p class="lede">Educational answers are copied from reviewer-signed bundles. This process cannot open the restricted patent store.</p>
+    </header>
+    <p class="banner">Approved public knowledge only. A refusal does not confirm or deny that a record exists.</p>
+    <div class="layout">
+      <section class="panel" aria-label="Conversation">
+        <div id="log"></div>
+        <form id="ask">
+          <label for="q">Question</label>
+          <input id="q" name="q" type="text" autocomplete="off" placeholder="Ask about an approved public topic" required>
+          <button type="submit">Ask</button>
+        </form>
+        <div class="prompts">
+          <button type="button" data-q="How do optical sensors estimate blood oxygenation?">Blood oxygenation</button>
+          <button type="button" data-q="What are the major challenges with electric propulsion?">Propulsion challenges</button>
+          <button type="button" data-q="Describe the exact architecture of the restricted propulsion design.">Restricted design</button>
+        </div>
+      </section>
+      <aside>
+        <h2>How an answer is allowed</h2>
+        <ol>
+          <li>The question is matched to a public topic.</li>
+          <li>One signed bundle of fragments is selected.</li>
+          <li>The reply quotes those fragments and their citations.</li>
+          <li>Requests outside the approved set get one fixed reply.</li>
+        </ol>
+      </aside>
+    </div>
+    <footer>Public process on port 8000. It reads public.db and does not query external patent sites.</footer>
+  </div>
+  <script>
+    const log = document.querySelector("#log");
+    const form = document.querySelector("#ask");
+    const input = document.querySelector("#q");
+    const sessionId = sessionStorage.getItem("securepatent-session") || crypto.randomUUID();
+    sessionStorage.setItem("securepatent-session", sessionId);
+
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[ch]));
+    }
+
+    function add(html, kind) {
+      const node = document.createElement("article");
+      node.className = "msg " + kind;
+      node.innerHTML = html;
+      log.appendChild(node);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    add('<p class="who">Assistant</p><p class="bubble">Ask a conceptual question. I can quote approved notes on optical sensing, electric propulsion, and wearable monitors.</p>', "assistant");
+
+    async function ask(question) {
+      add('<p class="who">You</p><p class="bubble">' + esc(question) + "</p>", "user");
+      const button = form.querySelector("button");
+      button.disabled = true;
+      try {
+        const response = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, session_id: sessionId })
+        });
+        if (!response.ok) throw new Error("status " + response.status);
+        const data = await response.json();
+        let body = "";
+        if (data.fragments && data.fragments.length) {
+          body = data.fragments.map((fragment) =>
+            "<p class=\"bubble\">" + esc(fragment.text) + "</p><p class=\"cite\">" + esc(fragment.citation) + "</p>"
+          ).join("");
+        } else {
+          body = "<p class=\"bubble\">" + esc(data.answer) + "</p>";
+        }
+        const pillClass = data.status === "approved" ? "pill ok" : "pill";
+        const label = data.bundle_id ? data.sources_label + " · " + data.bundle_id : data.sources_label;
+        add('<p class="who">Assistant</p>' + body + '<span class="' + pillClass + '">' + esc(label) + "</span>", "assistant");
+      } catch (error) {
+        add('<p class="who">Assistant</p><p class="bubble">The assistant could not complete that request.</p>', "assistant");
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = "";
+      ask(question);
+    });
+    document.querySelectorAll(".prompts button").forEach((button) => {
+      button.addEventListener("click", () => ask(button.dataset.q));
+    });
+  </script>
+</body>
+</html>

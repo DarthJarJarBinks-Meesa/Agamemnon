@@ -1,0 +1,62 @@
+{
+  "fragments": [
+    {
+      "id": "OX-1",
+      "topic": "oxygenation",
+      "citation": "Approved educational note OX-1",
+      "text": "Optical sensors can estimate blood oxygenation by measuring differences in light absorption at two wavelengths, commonly near 660 nm and 940 nm. The ratio of the pulsatile component follows from the Beer-Lambert relationship."
+    },
+    {
+      "id": "OX-2",
+      "topic": "oxygenation",
+      "citation": "Approved educational note OX-2",
+      "text": "Pulse oximetry separates a pulsatile arterial signal from the steadier background of tissue and venous blood. Established practice uses this method for noninvasive spot checks."
+    },
+    {
+      "id": "PR-1",
+      "topic": "propulsion",
+      "citation": "Approved educational note PR-1",
+      "text": "Electric propulsion accelerates a propellant with electric and magnetic fields. Ion thrusters and Hall thrusters are established spacecraft methods. They trade higher specific impulse for low thrust."
+    },
+    {
+      "id": "PR-2",
+      "topic": "propulsion",
+      "citation": "Approved educational note PR-2",
+      "text": "Known challenges include power-supply mass, electrode erosion, and keeping the spacecraft electrically neutral."
+    },
+    {
+      "id": "WR-1",
+      "topic": "wearable",
+      "citation": "Approved educational note WR-1",
+      "text": "Wearable monitors are small devices held against the body. Optical measurements and radio links are each established in consumer products, and reviewed notes here stay at that general level."
+    }
+  ],
+  "bundles": [
+    {
+      "id": "B-OX",
+      "topic": "oxygenation",
+      "fragment_ids": [
+        "OX-1",
+        "OX-2"
+      ],
+      "description": "Approved oxygenation background"
+    },
+    {
+      "id": "B-PR",
+      "topic": "propulsion",
+      "fragment_ids": [
+        "PR-1",
+        "PR-2"
+      ],
+      "description": "Approved electric propulsion background"
+    },
+    {
+      "id": "B-WR",
+      "topic": "wearable",
+      "fragment_ids": [
+        "WR-1"
+      ],
+      "description": "Approved wearable-monitor background"
+    }
+  ]
+}

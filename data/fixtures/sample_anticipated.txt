@@ -1,0 +1,7 @@
+Title: Three part wrist monitor
+Filing date: 2020-01-01
+Family: FAM-APP-ANTIC
+CPC: A61B5/1455
+
+Claims:
+1. A wearable physiological monitor comprising: a wrist-worn housing; a dual-wavelength optical sensor disposed in the housing; and a short-range wireless transmitter configured to send measurements to a remote device.
