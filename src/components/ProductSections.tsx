@@ -94,7 +94,7 @@ export function ProductSections() {
         index="/0.2"
         eyebrow="Prioris"
         title="Prior art search and viability scoring for examiners"
-        description="Prioris reads claims against the full historical corpus, ranks relevant art, and surfaces novelty and obviousness signals so examiners can move faster with higher confidence."
+        description="Prioris searches USPTO records, global patent claims, and technical literature, then ranks the closest art and flags novelty and obviousness questions for examiner review."
         videoSrc="/videos/prioris.mp4"
         reverse
         href="/prioris"

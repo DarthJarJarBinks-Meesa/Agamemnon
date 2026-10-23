@@ -6,7 +6,7 @@ import { PriorisDemo } from "@/components/PriorisDemo";
 export const metadata: Metadata = {
   title: "Prioris",
   description:
-    "Try Prioris, the examiner prior-art demo. It compares claim limitations with a local corpus and separates legal prior art from technical overlap.",
+    "Search USPTO records, global patents, and literature with Prioris. Claim charts flag possible anticipation and obviousness for examiner review.",
   alternates: { canonical: "/prioris" },
 };
 
@@ -21,7 +21,7 @@ export default function PriorisPage() {
             Prior art search and viability scoring for examiners
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-muted">
-            Upload a sample application. Prioris compares each claim limitation with the local demonstration corpus and labels unpublished or later records as technical overlap, not statutory prior art.
+            Paste an application. Prioris searches USPTO file-wrapper records, PatSnap patent claims, and PatSnap literature, then separates earlier publications from technical overlap.
           </p>
           <PriorisDemo />
           <p className="mt-10 text-sm text-fg-muted">

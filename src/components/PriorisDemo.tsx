@@ -113,7 +113,7 @@ export function PriorisDemo() {
             disabled={busy}
             className="inline-flex h-10 items-center bg-white px-4 text-sm font-medium text-black transition hover:bg-white/90 disabled:opacity-60"
           >
-            {busy ? "Analyzing" : "Analyze"}
+            {busy ? "Searching" : "Analyze"}
           </button>
         </div>
         <label className="grid gap-2 text-xs text-fg-muted">
@@ -121,16 +121,30 @@ export function PriorisDemo() {
           <textarea
             value={text}
             onChange={(event) => setText(event.target.value)}
-            placeholder="Paste an application, or load the fictional wearable sample."
+            placeholder="Paste claims, or load the wearable sample. Include a line such as Filing date: 2020-01-01."
             className="min-h-40 w-full border border-border bg-bg px-3 py-3 text-sm leading-relaxed text-fg outline-none placeholder:text-fg-dim"
           />
         </label>
-        <p className="text-sm text-fg-muted">Public demonstration key: analyst. Uploaded text is analyzed in this request and is not added to the corpus.</p>
+        <p className="text-sm text-fg-muted">
+          Public demonstration key: analyst. Prioris sends a keyword query from the claims to USPTO and PatSnap. The application text is not stored.
+        </p>
         {error ? <p className="text-sm text-white">{error}</p> : null}
       </form>
 
       {report ? (
         <div className="mt-6 space-y-4">
+          {report.warnings.length ? (
+            <div className="border border-border bg-bg-panel px-5 py-4 text-sm leading-relaxed text-fg-muted">
+              {report.warnings.map((warning) => (
+                <p key={warning}>{warning}</p>
+              ))}
+            </div>
+          ) : null}
+          <p className="text-sm text-fg-muted">
+            {report.filingDateAssumed
+              ? `Compared with ${report.filingDate} because the application did not include a filing date.`
+              : `Compared with filing date ${report.filingDate}.`}
+          </p>
           <section className="grid border border-border bg-bg-elevated sm:grid-cols-3">
             {[
               [report.claimsParsed, "Claims parsed"],
@@ -166,9 +180,19 @@ export function PriorisDemo() {
                     <th className="px-4 py-3 font-medium">Claim limitation</th>
                     {columns.map((candidate) => (
                       <th key={candidate.patentId} className="px-4 py-3 font-medium">
-                        {candidate.patentId}
+                        {candidate.href ? (
+                          <a href={candidate.href} target="_blank" rel="noreferrer" className="underline underline-offset-4">
+                            {candidate.patentId}
+                          </a>
+                        ) : (
+                          candidate.patentId
+                        )}
                         <span className="mt-1 block font-sans text-xs tracking-normal text-fg-muted normal-case">
                           {candidate.title}
+                        </span>
+                        <span className="mt-1 block font-sans text-[11px] tracking-normal text-fg-dim normal-case">
+                          {candidate.source}
+                          {candidate.assignee ? ` · ${candidate.assignee}` : ""}
                         </span>
                       </th>
                     ))}
@@ -179,7 +203,7 @@ export function PriorisDemo() {
                     <tr key={limitation.index} className="border-t border-border align-top">
                       <th className="px-4 py-3 font-sans text-sm font-normal text-fg">{limitation.text}</th>
                       {columns.map((candidate) => {
-                        const support = candidate.supports[index];
+                        const support = candidate.supports[index] ?? { label: "none", quote: "" };
                         return (
                           <td key={candidate.patentId} className={`px-4 py-3 ${labelClass(support.label)}`}>
                             {labelText(support.label)}
@@ -194,6 +218,26 @@ export function PriorisDemo() {
             </div>
           ) : null}
 
+          {report.candidates.length > columns.length ? (
+            <div className="border border-border px-5 py-4 text-sm text-fg-muted">
+              <p className="text-fg">Other legal candidates</p>
+              <ul className="mt-3 list-disc space-y-2 pl-5">
+                {report.candidates.slice(columns.length).map((item) => (
+                  <li key={item.patentId}>
+                    {item.href ? (
+                      <a href={item.href} target="_blank" rel="noreferrer" className="text-white underline underline-offset-4">
+                        {item.patentId}
+                      </a>
+                    ) : (
+                      item.patentId
+                    )}{" "}
+                    — {item.title}. {item.explicitCount} explicit, {item.partialCount} partial. {item.source}.
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
           {report.internalOverlap.length ? (
             <div className="border border-border px-5 py-4 text-sm text-fg-muted">
               <p className="text-fg">Technical overlap that is not statutory prior art</p>
@@ -201,6 +245,52 @@ export function PriorisDemo() {
                 {report.internalOverlap.map((item) => (
                   <li key={item.patentId}>
                     {item.patentId} — {item.eligibilityReason}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {report.bibliographic.length ? (
+            <div className="border border-border px-5 py-4 text-sm text-fg-muted">
+              <p className="text-fg">USPTO file-wrapper matches</p>
+              <ul className="mt-3 list-disc space-y-2 pl-5">
+                {report.bibliographic.map((item) => (
+                  <li key={item.id}>
+                    {item.href ? (
+                      <a href={item.href} target="_blank" rel="noreferrer" className="text-white underline underline-offset-4">
+                        {item.id}
+                      </a>
+                    ) : (
+                      item.id
+                    )}{" "}
+                    — {item.title}
+                    {item.assignee ? `, ${item.assignee}` : ""}
+                    {item.filingDate ? `, filed ${item.filingDate}` : ""}
+                    {item.publicationDate ? `, published ${item.publicationDate}` : ""}. Bibliographic match. Claim text was not retrieved for this record.
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {report.literature.length ? (
+            <div className="border border-border px-5 py-4 text-sm text-fg-muted">
+              <p className="text-fg">Non-patent literature</p>
+              <ul className="mt-3 list-disc space-y-3 pl-5">
+                {report.literature.map((item) => (
+                  <li key={item.id}>
+                    {item.href ? (
+                      <a href={item.href} target="_blank" rel="noreferrer" className="text-white underline underline-offset-4">
+                        {item.title}
+                      </a>
+                    ) : (
+                      <span className="text-white">{item.title}</span>
+                    )}
+                    {item.authors ? ` — ${item.authors}` : ""}
+                    {item.publication ? `, ${item.publication}` : ""}
+                    {item.publicationDate ? `, ${item.publicationDate}` : ""}. {item.eligibilityReason} {item.explicitCount} explicit, {item.partialCount} partial.
+                    {item.quote ? <span className="mt-1 block text-xs text-fg-dim">{item.quote}</span> : null}
                   </li>
                 ))}
               </ul>

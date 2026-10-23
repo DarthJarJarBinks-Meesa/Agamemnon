@@ -11,7 +11,7 @@ const platforms = [
   {
     name: "Prioris",
     href: "/prioris",
-    blurb: "Examiner prior-art and viability engine.",
+    blurb: "Live prior-art search across USPTO records, global patents, and literature.",
   },
   {
     name: "Lexicon",

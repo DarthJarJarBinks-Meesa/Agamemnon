@@ -33,9 +33,20 @@ pytest
 
 The corpus is synthetic: about 60 fictional patents, simulated disclosure labels, and approved public notes. It is not a complete prior-art search and it does not decide whether a claim is valid.
 
+## Live prior-art search
+
+The Prioris page on the site searches live indexes when the keys in `.env` are set:
+
+- `USPTO_API_KEY` searches US patent file-wrapper records.
+- `PATSNAP_API_KEY` searches global patent claims and technical literature.
+
+Copy `.env.example` to `.env` and paste the keys there. The page sends a keyword query built from the claims. It does not store the application. Each search reads a capped set of the closest documents, not the entire historical archive. Athena still answers only from reviewer-signed fragments and does not use these keys.
+
+The Python examiner above stays on the laptop and does not call USPTO or PatSnap.
+
 ## Marketing homepage
 
-The Next.js site in this repo includes the public demos at `/athena` and `/prioris`. From the same environment that has Node installed:
+The Next.js site in this repo includes Athena at `/athena` and live Prioris search at `/prioris`. From the same environment that has Node installed:
 
 ```bash
 npm install
