@@ -82,7 +82,7 @@ The Prioris page on the site searches live indexes when the keys in `.env` are s
 - `USPTO_API_KEY` searches US patent file-wrapper records.
 - `PATSNAP_API_KEY` searches global patent claims and technical literature.
 
-Copy `.env.example` to `.env` and paste the keys there. The page sends a keyword query built from the claims. It does not store the application. Each search reads a capped set of the closest documents, not the entire historical archive. Athena answers ordinary questions from public references, including Wikipedia, and from USPTO and PatSnap when those keys are set. A request for restricted material still gets one fixed reply and does not call those services.
+Copy `.env.example` to `.env` and paste the keys there. The page sends a keyword query built from the claims. It does not store the application. Each search reads a capped set of the closest documents, not the entire historical archive. Athena answers ordinary questions from public references, including Wikipedia, and from USPTO and PatSnap when those keys are set. `GROQ_API_KEY` lets a free Groq model decide whether a question is asking for restricted material before any search. Without that key, a fixed pattern list makes the same decision. A restricted question gets one fixed reply and does not call the search services.
 
 The Python examiner above stays on the laptop and does not call USPTO or PatSnap.
 

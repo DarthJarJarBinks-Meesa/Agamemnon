@@ -73,7 +73,23 @@ function topicFor(question: string) {
   return ranked[0].topic;
 }
 
-export function decideAthena(question: string, already: string[], maxBundles = 3): AthenaDecision {
+export function fixedRefusal(already: string[]): AthenaDecision {
+  return {
+    status: "no_approved_material",
+    bundleId: null,
+    fragments: [],
+    answer: NO_APPROVED,
+    releasedBundleIds: [...new Set(already)],
+    sourcesLabel: "Approved public knowledge only",
+  };
+}
+
+export function decideAthena(
+  question: string,
+  already: string[],
+  maxBundles = 3,
+  options?: { trustQuestion?: boolean },
+): AthenaDecision {
   const released = new Set(already);
   const sourcesLabel = "Approved public knowledge only";
   const refuse = (status: AthenaDecision["status"], answer: string): AthenaDecision => ({
@@ -86,7 +102,7 @@ export function decideAthena(question: string, already: string[], maxBundles = 3
   });
 
   const normalized = normalize(question);
-  if (isSensitiveQuestion(normalized)) {
+  if (!options?.trustQuestion && isSensitiveQuestion(normalized)) {
     return refuse("no_approved_material", NO_APPROVED);
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { decideAthena, isSensitiveQuestion } from "@/lib/demo/athena";
+import { decideAthena, fixedRefusal, isSensitiveQuestion } from "@/lib/demo/athena";
 import { answerFromPublicSources } from "@/lib/live/answer";
+import { judgeSensitivity } from "@/lib/live/guard";
 
 export const maxDuration = 60;
 
@@ -41,9 +42,12 @@ export async function POST(request: Request) {
   const already = Array.isArray(body.releasedBundleIds)
     ? body.releasedBundleIds.filter((id): id is string => typeof id === "string").slice(0, 8)
     : [];
-  const decision = decideAthena(body.question, already);
-  if (isSensitiveQuestion(body.question)) return NextResponse.json(decision);
+  const sensitivity = await judgeSensitivity(body.question);
+  if (sensitivity === "sensitive" || (sensitivity === "unknown" && isSensitiveQuestion(body.question))) {
+    return NextResponse.json(fixedRefusal(already));
+  }
 
+  const decision = decideAthena(body.question, already, 3, { trustQuestion: true });
   const sources = await answerFromPublicSources(body.question);
   if (!sources.length) return NextResponse.json(decision);
 

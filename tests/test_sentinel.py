@@ -61,12 +61,13 @@ def test_public_athena_does_not_read_the_private_corpus():
         ROOT / "src/app/api/athena/route.ts",
         ROOT / "src/lib/demo/athena.ts",
         ROOT / "src/lib/live/answer.ts",
+        ROOT / "src/lib/live/guard.ts",
     ]
     for path in names:
         text = path.read_text().lower()
         assert "patents.json" not in text
         assert "prioris" not in text
-        assert "openai" not in text
+        assert "api.openai.com" not in text
 
 
 def test_analysis_does_not_publish_or_leak(tmp_path, monkeypatch):

@@ -166,9 +166,9 @@ export function AthenaDemo() {
       <aside className="border border-border bg-bg-elevated p-6">
         <h2 className="text-xl font-medium tracking-[-0.02em]">How Athena answers</h2>
         <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-relaxed text-fg-muted">
-          <li>Athena looks up a public reference for the question.</li>
-          <li>A signed note is included when the topic has one.</li>
-          <li>A request for restricted material gets one fixed reply.</li>
+          <li>A model checks whether the question is asking for restricted material. The question is the only text it sees.</li>
+          <li>If it is not, Athena looks up a public reference and includes a signed note when one exists.</li>
+          <li>If it is, Athena gives one fixed reply and does not search.</li>
           <li>Prioris is the prior-art search for a draft application.</li>
         </ol>
       </aside>
