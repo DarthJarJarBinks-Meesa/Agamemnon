@@ -31,14 +31,74 @@ const QUESTION_WORDS = new Set([
   "makes",
   "major",
   "please",
+  "store",
+  "stores",
+  "stored",
+  "storing",
+  "estimate",
+  "estimates",
+  "estimated",
+  "estimating",
 ]);
 
 const cache = new Map<string, { at: number; sources: PublicSource[] }>();
 const USER_AGENT = "AgamemnonAthena/1.0 (https://www.agamemnonai.org)";
 
+function singular(token: string) {
+  if (
+    token.length > 4 &&
+    token.endsWith("s") &&
+    !token.endsWith("ss") &&
+    !token.endsWith("is") &&
+    !token.endsWith("us") &&
+    !token.endsWith("ous")
+  ) {
+    return token.slice(0, -1);
+  }
+  return token;
+}
+
 function keywords(question: string) {
-  const tokens = contentTokens(question).map((token) => (token.endsWith("s") && token.length > 4 ? token.slice(0, -1) : token));
+  const tokens = contentTokens(question).map(singular);
   return [...new Set(tokens.filter((token) => !QUESTION_WORDS.has(token)))].sort((a, b) => b.length - a.length).slice(0, 4);
+}
+
+function sameWord(word: string, token: string) {
+  return word === token || word === singular(token) || token === singular(word);
+}
+
+function titleTokens(title: string) {
+  return title.toLowerCase().match(/[a-z0-9]+(?:-[a-z0-9]+)*/g) ?? [];
+}
+
+const SIDE_TOPIC = /\b(crisis|war|battle|attack|attacks|incident|scandal|election|treaty|assassination|massacre)\b/i;
+
+function sideTopic(title: string, question: string) {
+  if (SIDE_TOPIC.test(title) && !SIDE_TOPIC.test(question)) return true;
+  return /^(list of|timeline of|history of)\b/i.test(title) && !/\b(list|timeline|history)\b/i.test(question);
+}
+
+function titleScore(title: string, words: string[], question: string) {
+  const tokens = titleTokens(title);
+  const hits = words.filter((word) => tokens.some((token) => sameWord(word, token)));
+  let score = hits.length * 5;
+  if (words.length && words.every((word) => tokens.some((token) => sameWord(word, token)))) {
+    score += 8;
+    if (tokens.length <= words.length + 1) score += 4;
+  }
+  const main = title.toLowerCase().replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  if (words.some((word) => main === word || main === `${word}s`)) score += 10;
+  if (!hits.length) score -= 6;
+  if (sideTopic(title, question)) score -= 20;
+  return score;
+}
+
+function chooseTitle(titles: string[], words: string[], question: string) {
+  const unique = [...new Set(titles)];
+  const ranked = unique
+    .map((title) => ({ title, score: titleScore(title, words, question) }))
+    .sort((a, b) => b.score - a.score || a.title.length - b.title.length);
+  return ranked.find((item) => item.score > 0)?.title ?? unique.find((title) => !sideTopic(title, question)) ?? unique[0] ?? "";
 }
 
 function clip(value: string, limit = 700) {
@@ -62,21 +122,47 @@ function text(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-async function wikipedia(question: string): Promise<PublicSource | null> {
+async function wikiSearch(query: string) {
   const search = new URL("https://en.wikipedia.org/w/api.php");
   search.searchParams.set("action", "query");
   search.searchParams.set("list", "search");
-  search.searchParams.set("srsearch", question);
-  search.searchParams.set("srlimit", "1");
+  search.searchParams.set("srsearch", query);
+  search.searchParams.set("srlimit", "8");
+  search.searchParams.set("srinfo", "suggestion");
   search.searchParams.set("format", "json");
   const found = await fetch(search, {
     headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
     signal: AbortSignal.timeout(12000),
   });
   const payload = record(await readJson(found));
-  const query = record(payload?.query);
-  const hit = Array.isArray(query?.search) ? record(query.search[0]) : null;
-  const title = text(hit?.title);
+  const queryBody = record(payload?.query);
+  const titles = Array.isArray(queryBody?.search)
+    ? queryBody.search.map((item) => text(record(item)?.title)).filter(Boolean)
+    : [];
+  const suggestion = text(record(queryBody?.searchinfo)?.suggestion);
+  return { ok: found.ok, titles, suggestion };
+}
+
+async function wikipedia(question: string): Promise<PublicSource | null> {
+  const words = keywords(question);
+  const subject = words.slice(0, 3).join(" ") || question;
+  let found = await wikiSearch(subject);
+  let chosenWords = words;
+  if (found.ok && words.length && found.suggestion && !found.titles.some((title) => titleScore(title, words, question) > 0)) {
+    const corrected = keywords(found.suggestion);
+    if (corrected.length && corrected.join(" ") !== words.join(" ")) {
+      const retry = await wikiSearch(corrected.slice(0, 3).join(" "));
+      if (retry.ok && retry.titles.length) {
+        found = retry;
+        chosenWords = corrected;
+      }
+    }
+  }
+  if (found.ok && subject !== question && !found.titles.some((title) => titleScore(title, chosenWords, question) > 0)) {
+    const broad = await wikiSearch(question);
+    if (broad.ok) found = { ...found, titles: [...broad.titles, ...found.titles] };
+  }
+  const title = chooseTitle(found.titles, chosenWords, question);
   if (!found.ok || !title) return null;
 
   const summary = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, {
